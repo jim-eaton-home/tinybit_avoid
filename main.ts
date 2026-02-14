@@ -1,60 +1,101 @@
-input.onButtonPressed(Button.A, function on_button_pressed_a() {
-    
-    letsGo = true
-    let started = false
-    basic.clearScreen()
-    basic.showIcon(IconNames.Yes)
-    distanceToBad = Tinybit.Ultrasonic_CarV2()
-    while (letsGo && !pressedButtonB) {
-        // short pause to allow the processor to catch up the events
-        basic.pause(10)
-        distanceToBad = Tinybit.Ultrasonic_CarV2()
-        if (distanceToBad <= 30) {
-            robot_avoid()
-            started = false
-        }
-        
-        if (!started) {
-            Tinybit.CarCtrlSpeed(Tinybit.CarState.Car_Run, speed_run)
-            basic.pause(10)
-            started = true
-        }
-        
+function turnLeft (speed: number, time: number) {
+    if (b) {
+        Tinybit.CarCtrlSpeed(Tinybit.CarState.Car_SpinLeft, speed)
+        basic.pause(time)
     }
-    basic.showIcon(IconNames.No)
+}
+input.onButtonPressed(Button.A, function () {
+    a += 1
 })
-input.onButtonPressed(Button.B, function on_button_pressed_b() {
-    
-    Tinybit.CarCtrl(Tinybit.CarState.Car_Stop)
-    letsGo = false
-    distanceToBad = 0
-    Tinybit.CarCtrl(Tinybit.CarState.Car_Stop)
-    basic.clearScreen()
-    if (pressedButtonB) {
-        robot_avoid()
-        basic.showIcon(IconNames.Skull)
-    } else {
-        basic.showIcon(IconNames.Asleep)
+function driveBackward (speed: number, time: number) {
+    if (b) {
+        Tinybit.CarCtrlSpeed(Tinybit.CarState.Car_Back, speed)
+        basic.pause(time)
     }
-    
-    Tinybit.CarCtrl(Tinybit.CarState.Car_Stop)
-    pressedButtonB = !pressedButtonB
-    basic.pause(100)
+}
+function turnRight (speed: number, time: number) {
+    if (b) {
+        Tinybit.CarCtrlSpeed(Tinybit.CarState.Car_SpinRight, speed)
+        basic.pause(time)
+    }
+}
+function smartStop () {
+    if (b) {
+        Tinybit.CarCtrl(Tinybit.CarState.Car_Stop)
+    }
+}
+input.onButtonPressed(Button.B, function () {
+    b = 1
 })
-function robot_avoid() {
-    
-    //  the simulator says this will be right turn
+function driveForward (speed: number, time: number) {
+    if (b) {
+        Tinybit.CarCtrlSpeed(Tinybit.CarState.Car_Run, speed)
+        basic.pause(time)
+    }
+}
+function robot_avoid () {
+    basic.showIcon(IconNames.Skull)
+    b = 0
+    // the simulator says this will be right turn
     Tinybit.CarCtrl(Tinybit.CarState.Car_Stop)
-    Tinybit.CarCtrlSpeed(Tinybit.CarState.Car_SpinLeft, speed_spin)
+    Tinybit.CarCtrlSpeed(Tinybit.CarState.Car_SpinLeft, 65)
     basic.pause(500)
     Tinybit.CarCtrl(Tinybit.CarState.Car_Stop)
+    basic.showIcon(IconNames.Sad)
 }
-
-let pressedButtonB = false
-let letsGo = false
 let distanceToBad = 0
-distanceToBad = 10
-let speed_run = 100
-let speed_spin = 80
-basic.clearScreen()
-basic.showIcon(IconNames.Surprised)
+let a = 0
+let b = 0
+basic.showIcon(IconNames.Heart)
+basic.forever(function () {
+    if (a == 3) {
+        a = 1
+    }
+})
+basic.forever(function () {
+    distanceToBad = Tinybit.Ultrasonic_Car()
+    if (distanceToBad <= 10) {
+        robot_avoid()
+    }
+})
+basic.forever(function () {
+    if (a == 1) {
+        basic.showLeds(`
+            # # # # #
+            # . . . #
+            # . . . #
+            # . . . #
+            # # # # #
+            `)
+        if (b == 1) {
+            basic.pause(1000)
+            for (let index = 0; index < 4; index++) {
+                driveForward(80, 1000)
+                turnLeft(65, 400)
+            }
+            smartStop()
+            b = 0
+        }
+    }
+})
+basic.forever(function () {
+    if (a == 2) {
+        basic.showLeds(`
+            # . . . #
+            # . . # #
+            # . # . #
+            # # . . #
+            # . . . #
+            `)
+        if (b == 1) {
+            basic.pause(1000)
+            driveForward(80, 1000)
+            turnLeft(65, 600)
+            driveForward(80, 2000)
+            turnRight(65, 600)
+            driveForward(80, 1000)
+            smartStop()
+            b = 0
+        }
+    }
+})
