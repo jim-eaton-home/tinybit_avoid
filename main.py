@@ -25,10 +25,10 @@ def on_button_pressed_b():
     b = 1
 input.on_button_pressed(Button.B, on_button_pressed_b)
 
-def driveForward(speed5: number, time5: number):
+def driveForward(speed4: number, time4: number):
     if b:
-        Tinybit.car_ctrl_speed(Tinybit.CarState.CAR_RUN, speed5)
-        basic.pause(time5)
+        Tinybit.car_ctrl_speed(Tinybit.CarState.CAR_RUN, speed4)
+        basic.pause(time4)
 def robot_avoid():
     global b
     basic.show_icon(IconNames.SKULL)
@@ -46,7 +46,7 @@ basic.show_icon(IconNames.HEART)
 
 def on_forever():
     global a
-    if a == 3:
+    if a == 4:
         a = 1
 basic.forever(on_forever)
 
@@ -58,25 +58,6 @@ def on_forever2():
 basic.forever(on_forever2)
 
 def on_forever3():
-    global b
-    if a == 1:
-        basic.show_leds("""
-            # # # # #
-            # . . . #
-            # . . . #
-            # . . . #
-            # # # # #
-            """)
-        if b == 1:
-            basic.pause(1000)
-            for index in range(4):
-                driveForward(80, 1000)
-                turnLeft(65, 400)
-            smartStop()
-            b = 0
-basic.forever(on_forever3)
-
-def on_forever4():
     global b
     if a == 2:
         basic.show_leds("""
@@ -95,4 +76,45 @@ def on_forever4():
             driveForward(80, 1000)
             smartStop()
             b = 0
+basic.forever(on_forever3)
+
+def on_forever4():
+    global b
+    if a == 3:
+        basic.show_leds("""
+            # . . . .
+            # # . . .
+            # . # . .
+            # . . # .
+            # # # # #
+            """)
+        if b == 1:
+            basic.pause(1000)
+            turnLeft(65, 400)
+            driveForward(80, 2000)
+            turnRight(65, 600)
+            driveForward(80, 1000)
+            turnRight(65, 400)
+            driveForward(80, 1000)
+            smartStop()
+            b = 0
 basic.forever(on_forever4)
+
+def on_forever5():
+    global b
+    if a == 1:
+        basic.show_leds("""
+            # # # # #
+            # . . . #
+            # . . . #
+            # . . . #
+            # # # # #
+            """)
+        if b == 1:
+            basic.pause(1000)
+            for index in range(4):
+                driveForward(80, 1000)
+                turnLeft(65, 400)
+            smartStop()
+            b = 0
+basic.forever(on_forever5)
