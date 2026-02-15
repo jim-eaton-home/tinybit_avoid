@@ -48,7 +48,7 @@ let a = 0
 let b = 0
 basic.showIcon(IconNames.Heart)
 basic.forever(function () {
-    if (a == 3) {
+    if (a == 4) {
         a = 1
     }
 })
@@ -56,26 +56,6 @@ basic.forever(function () {
     distanceToBad = Tinybit.Ultrasonic_Car()
     if (distanceToBad <= 10) {
         robot_avoid()
-    }
-})
-basic.forever(function () {
-    if (a == 1) {
-        basic.showLeds(`
-            # # # # #
-            # . . . #
-            # . . . #
-            # . . . #
-            # # # # #
-            `)
-        if (b == 1) {
-            basic.pause(1000)
-            for (let index = 0; index < 4; index++) {
-                driveForward(80, 1000)
-                turnLeft(65, 400)
-            }
-            smartStop()
-            b = 0
-        }
     }
 })
 basic.forever(function () {
@@ -94,6 +74,48 @@ basic.forever(function () {
             driveForward(80, 2000)
             turnRight(65, 600)
             driveForward(80, 1000)
+            smartStop()
+            b = 0
+        }
+    }
+})
+basic.forever(function () {
+    if (a == 3) {
+        basic.showLeds(`
+            # . . . .
+            # # . . .
+            # . # . .
+            # . . # .
+            # # # # #
+            `)
+        if (b == 1) {
+            basic.pause(1000)
+            turnLeft(65, 400)
+            driveForward(80, 2000)
+            turnRight(65, 600)
+            driveForward(80, 1000)
+            turnRight(65, 400)
+            driveForward(80, 1000)
+            smartStop()
+            b = 0
+        }
+    }
+})
+basic.forever(function () {
+    if (a == 1) {
+        basic.showLeds(`
+            # # # # #
+            # . . . #
+            # . . . #
+            # . . . #
+            # # # # #
+            `)
+        if (b == 1) {
+            basic.pause(1000)
+            for (let index = 0; index < 4; index++) {
+                driveForward(80, 1000)
+                turnLeft(65, 400)
+            }
             smartStop()
             b = 0
         }
